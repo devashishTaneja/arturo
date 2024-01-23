@@ -14,14 +14,14 @@ module Arturo
     include Arturo::FeatureManagement
     include Arturo::FeatureParamsSupport
 
-    respond_to :html, :json, :xml
-
     if respond_to?(:before_action)
       before_action :require_permission
       before_action :load_feature, :only => [ :show, :edit, :update, :destroy ]
+      before_action :set_response_format
     else
       before_filter :require_permission
       before_filter :load_feature, :only => [ :show, :edit, :update, :destroy ]
+      before_filter :set_response_format
     end
 
     def index
@@ -106,6 +106,9 @@ module Arturo
       @feature ||= Arturo::Feature.find(params[:id])
     end
 
+    def set_response_format
+      respond_to :html, :json, :xml
+    end
   end
 
 end
